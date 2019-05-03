@@ -6,16 +6,20 @@
 """
 
 import webbrowser
-from client import FacebookClient, PyfbException
+from client import FacebookClient
+
 
 class Pyfb(object):
     """
         This class is Facade for FacebookClient
     """
 
-    def __init__(self, app_id, access_token=None, raw_data=False, permissions=None):
+    def __init__(
+            self, app_id, access_token=None, raw_data=False, permissions=None):
 
-        self._client = FacebookClient(app_id, access_token=access_token, raw_data=raw_data, permissions=permissions)
+        self._client = FacebookClient(
+            app_id, access_token=access_token,
+            raw_data=raw_data, permissions=permissions)
 
     def authenticate(self):
         """
@@ -45,11 +49,13 @@ class Pyfb(object):
         """
             Gets the access token
         """
-        return self._client.get_access_token(app_secret_key, secret_code, redirect_uri)
+        return self._client.get_access_token(
+            app_secret_key, secret_code, redirect_uri)
 
     def exchange_token(self, app_secret_key, exchange_token):
         """
-             Exchanges a short-lived access token (like those obtained from client-side JS api)
+             Exchanges a short-lived access token
+             (like those obtained from client-side JS api)
              for a longer-lived access token
         """
         return self._client.exchange_token(app_secret_key, exchange_token)
@@ -75,15 +81,20 @@ class Pyfb(object):
 
     def set_access_token(self, token):
         """
-            Sets the access token. Necessary to make the requests that requires autenthication
+            Sets the access token. Necessary to make
+            the requests that requires autenthication
         """
         self._client.access_token = token
 
     def set_permissions(self, permissions):
         """
-            Sets a list of data access permissions that the user must give to the application
+            Sets a list of data access permissions that
+            the user must give to the application
             e.g:
-                permissions = [auth.USER_ABOUT_ME, auth.USER_LOCATION, auth.FRIENDS_PHOTOS, ...]
+                permissions = [
+                    auth.USER_ABOUT_ME,
+                    auth.USER_LOCATION,
+                    auth.FRIENDS_PHOTOS, ...]
         """
         self._client.permissions = permissions
 
@@ -131,11 +142,11 @@ class Pyfb(object):
         """
         return self._client.push(id, "feed", message=message, **kwargs)
 
-    def publish_picture(self,message,id=None,**kwargs):
+    def publish_picture(self, message, id=None, **kwargs):
         """
             Publish picture
         """
-        return self._client.push(id,"photos",message=message,**kwargs);
+        return self._client.push(id, "photos", message=message, **kwargs)
 
     def comment(self, message, id=None, **kwargs):
         """
@@ -160,7 +171,7 @@ class Pyfb(object):
             LIKE: It Doesn't work. Seems to be a bug on the Graph API
             http://bugs.developers.facebook.net/show_bug.cgi?id=10714
         """
-        print self.like.__doc__
+        print(self.like.__doc__)
         return self._client.push(id, "likes")
 
     def delete(self, id):

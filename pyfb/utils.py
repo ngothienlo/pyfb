@@ -9,7 +9,7 @@ try:
 except ImportError:
     import simplejson
 
-import urllib2
+import urllib
 
 
 class FacebookObject(object):
@@ -40,7 +40,8 @@ class PaginatedList(list):
             if not url:
                 return PaginatedList()
 
-            obj = factory.make_object(object_name, urllib2.urlopen(url).read())
+            obj = factory.make_object(
+              object_name, urllib.request.urlopen(url).read())
             objs_list = factory.make_paginated_list(obj, object_name)
 
             if not objs_list:
@@ -55,13 +56,12 @@ class PaginatedList(list):
 class Json2ObjectsFactory(object):
     """
         Converts a json-like dictionary into an object.
-
         It navigates recursively into the dictionary turning
         everything into an object.
     """
 
     def loads(self, data):
-        return simplejson.loads(data)
+        return simplejson.loads(simplejson.dumps(data))
 
     def make_object(self, name, data):
         raw = self.loads(data)
@@ -74,7 +74,7 @@ class Json2ObjectsFactory(object):
     def make_paginated_list(self, obj, object_name):
 
         objs = getattr(obj, object_name, False)
-        if objs == False:
+        if objs is False:
             return False
 
         objs_list = PaginatedList(objs, obj, object_name)
@@ -90,9 +90,9 @@ class Json2ObjectsFactory(object):
         return objs
 
     def _make_object(self, name, dic):
-        #Life's easy. For Python Programmers BTW ;-).
+        # Life's easy. For Python Programmers BTW ;-).
         obj = FacebookObject(name)
-        for key, value in dic.iteritems():
+        for key, value in dic.items():
             if key == 'data':
                 key = obj.__name__
             if isinstance(value, list):
